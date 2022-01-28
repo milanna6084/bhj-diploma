@@ -1,3 +1,6 @@
+//const { append } = require("express/lib/response");
+//--------Закомментировала эту строку в 5ти файлах, иначе выходит ошибка "Require is not defined" ------------//
+
 /**
  * Класс CreateTransactionForm управляет формой
  * создания новой транзакции
@@ -8,7 +11,9 @@ class CreateTransactionForm extends AsyncForm {
    * метод renderAccountsList
    * */
   constructor(element) {
-    super(element)
+    super(element);
+
+    this.renderAccountsList();
   }
 
   /**
@@ -16,7 +21,32 @@ class CreateTransactionForm extends AsyncForm {
    * Обновляет в форме всплывающего окна выпадающий список
    * */
   renderAccountsList() {
+    console.log('render Acconts list in select')
+    const list = this.form.querySelector('.accounts-select');
 
+    if (!User.current()) {
+      return;
+    }
+
+    const { email } = User.current();
+
+    Account.list({ email }, (err, response) => {
+      if (!response.success) {
+        console.error(err);
+        return;
+      }
+
+      list.innerHTML = '';
+
+      for (let item of response.data) {
+        const option = document.createElement('option');
+
+        option.value = item.id;
+        option.innerText = item.name;
+
+        list.append(option);
+      }
+    });
   }
 
   /**
@@ -26,6 +56,16 @@ class CreateTransactionForm extends AsyncForm {
    * в котором находится форма
    * */
   onSubmit(data) {
+    Transaction.create(data, (err, response) => {
+      if (!response.success) {
+        console.error(err)
+      }
 
+      App.update();
+      this.form.reset();
+
+      App.getModal('newIncome').close();
+      App.getModal('newExpense').close();
+    });
   }
 }

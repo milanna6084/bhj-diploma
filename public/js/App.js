@@ -51,7 +51,7 @@ class App {
     this.modals = {
       register: new Modal(document.querySelector("#modal-register")),
       login: new Modal(document.querySelector("#modal-login")),
-      createAccount: new Modal(document.querySelector("#modal-new-account")),
+      newAccount: new Modal(document.querySelector("#modal-new-account")), // Изменила createAccount на newAccount
       newIncome: new Modal(document.querySelector("#modal-new-income")),
       newExpense: new Modal(document.querySelector("#modal-new-expense")),
     };
@@ -153,12 +153,14 @@ class App {
     if (this.state) {
       this.element.classList.remove(`app_${this.state}`);
     }
+
     this.element.classList.add(`app_${state}`);
     this.state = state;
 
     if (state === "user-logged") {
       this.update();
     }
+
     if (state === "init") {
       this.clear();
     }
