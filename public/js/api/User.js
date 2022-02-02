@@ -6,17 +6,12 @@
 class User {
   static URL = '/user';
 
-  constructor() {
-    this.user = {};
-  }
-
   /**
    * Устанавливает текущего пользователя в
    * локальном хранилище.
    * */
   static setCurrent(user) {
-    this.user = user;
-    window.localStorage.setItem('user', JSON.stringify(this.user));
+    localStorage.setItem('user', JSON.stringify(user));
   }
 
   /**
@@ -24,8 +19,7 @@ class User {
    * пользователе из локального хранилища.
    * */
   static unsetCurrent() {
-    this.user = {};
-    window.localStorage.removeItem('user');
+    localStorage.removeItem('user');
   }
 
   /**
@@ -33,8 +27,7 @@ class User {
    * из локального хранилища
    * */
   static current() {
-    const currentUser = window.localStorage.getItem('user');
-    return JSON.parse(currentUser);
+    return JSON.parse( window.localStorage.getItem('user'));
   }
 
   /**
@@ -43,7 +36,7 @@ class User {
    * */
   static fetch(callback) {
     createRequest({
-      url: User.URL + '/current',
+      url: this.URL + '/current',
       data: {},
       method: 'GET',
       callback: (err, response) => {
@@ -65,9 +58,8 @@ class User {
    * */
   static login(data, callback) {
     createRequest({
-      url: User.URL + '/login',
+      url: this.URL + '/login',
       method: 'POST',
-      responseType: 'json',
       data: data,
       callback: (err, response) => {
         if (response && response.user) {
@@ -86,9 +78,8 @@ class User {
    * */
   static register(data, callback) {
     createRequest({
-      url: User.URL + '/register',
+      url: this.URL + '/register',
       method: 'POST',
-      responseType: 'json',
       data: data,
       callback: (err, response) => {
         if (response && response.user) {
@@ -106,9 +97,8 @@ class User {
    * */
   static logout(callback) {
     createRequest({
-      url: User.URL + '/logout',
+      url: this.URL + '/logout',
       method: 'POST',
-      responseType: 'json',
       data: {},
       callback: (err, response) => {
         if (response && response.success) {

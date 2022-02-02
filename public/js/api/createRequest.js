@@ -16,36 +16,26 @@ const createRequest = (options = {}) => {
   function getResponse() {
     let response;
     let err;
-
-    if (this.status === 200) {
-      response = this.response;
-       
-      if (this.response.success) {
-         err = null;
-      } else {
-        err = this.response.error;
-      } 
-      callback(err, response);     
-    }
+    
+    response = this.response;
+    (this.response.success) ? err = null : err = this.response.error;
+         
+    callback(err, response);     
+  
   }
 
+  const formData = new FormData();
+  let urlForGet = '';
+
+  for (let value in data) {
+    urlForGet = `${urlForGet}${value}=${data[value]}&`
+    formData.append(value, data[value]);
+  }
   if (method === 'GET') {
-    xhr.open(method, `${url}?email=${data.email}&password=${data.password}&name=${data.name}}&id=${data.id}&user_id=${data.user_id}&account_id=${data.account_id}`);
+    xhr.open(method, `${url}?${urlForGet}`);
     xhr.send();
   } else {
-    const formData = new FormData();
-
-    formData.append('user_id', data.user_id);
-    formData.append('account_id', data.account_id);
-    formData.append('sum', data.sum);
-    formData.append('type', data.type);
-    formData.append('id', data.id);
-    formData.append('name', data.name);
-    formData.append('email', data.email);
-    formData.append('password', data.password);
-
     xhr.open(method, url);
-
     xhr.send(formData);
   }
 };

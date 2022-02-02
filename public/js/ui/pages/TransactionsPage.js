@@ -50,12 +50,10 @@ class TransactionsPage {
 
       content.addEventListener('click', (event) => {
         const item = event.target;
-        if (
-          item.classList.contains('transaction__remove')
-          || item.closest('button').classList.contains('transaction__remove')
-        ) {
-          let id = item.dataset.id;
-          this.removeTransaction(id);
+        if ( item.classList.contains('transaction__remove')) {
+          this.removeTransaction(item.dataset.id);
+        } else if (item.closest('button').classList.contains('transaction__remove')) {
+          this.removeTransaction(item.closest('button').dataset.id);
         }
       }); 
     } 
